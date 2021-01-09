@@ -1,22 +1,28 @@
 require('dotenv').config();
-
 const express = require('express');
+//const bodyParser = require('body-parser');
 const app = express();
+const passport = require('./services/auth/passport');
 
 const postsRoutes = require('./routes/posts');
+const usersRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth');
 
-app.db = 'some DB connection';
-//app.resolve = function(depName) {return };
+app.use(express.json());
+app.use(passport.initialize());
 
-app.use((req, res, next) => {
-    const user = 'Vasya';
-    req.user = user;
-    next();
-});
-
+app.use('/auth', authRoutes);
 // POSTS:
 app.use('/posts', postsRoutes);
+// USERS:
+app.use('/users', usersRoutes);
+
+// Default error handler:
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send(err);
+});
 
 app.listen(process.env.PORT, () => {
-    console.log(`App server started on ${process.env.PORT}!`);
+  console.log(`App server started on ${process.env.PORT}!`);
 });

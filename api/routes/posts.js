@@ -1,28 +1,24 @@
 const router = require('express').Router();
+require('../services/db');
 
-router.get('/', (req, res) => {
-    res.send('List Ok');
+router.get('/', async (req, res) => {
+  res.send('List');
 });
 
 router.get('/:id', (req, res) => {
-    console.log('DB from app', req.app.db);
-    console.log('DB from request', req.user);
-    res.json({
-        db: req.app.db,
-        user: req.user
-    });
+  res.send('Single record');
 });
 
 router.post('/', (req, res) => {
-    res.send('Create Ok');
+  res.send('New value: ');
 });
 
 router.put('/:id', (req, res) => {
-    res.send('Update Ok');
+  res.send('Update Ok');
 });
 
 router.delete('/:id', (req, res) => {
-    res.send('Delete Ok');
+  res.send('Delete Ok');
 });
 
 module.exports = router;
