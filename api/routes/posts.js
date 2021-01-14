@@ -1,7 +1,6 @@
 const router = require('express').Router();
-require('../services/db');
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   res.send('List');
 });
 
