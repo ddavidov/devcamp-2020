@@ -2,13 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const passport = require('./services/auth/passport');
+const authRequest = require('./middleware/request-auth');
 
 const postsRoutes = require('./routes/posts');
 const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 
+
 app.use(express.json());
 app.use(passport.initialize());
+app.use(authRequest);
 
 app.use('/auth', authRoutes);
 // POSTS:
@@ -18,7 +21,7 @@ app.use('/users', usersRoutes);
 
 // Default error handler:
 app.use(function (err, req, res, next) {
-  console.error(err.stack);
+  console.error(err);
   res.status(500).send(err);
 });
 

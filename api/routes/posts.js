@@ -1,8 +1,9 @@
 const router = require('express').Router();
+const checkAuth = require('../middleware/acl').checkAuthorized;
 
-router.get('/', (req, res) => {
+router.get('/', [checkAuth, (req, res) => {
   res.send('List');
-});
+}]);
 
 router.get('/:id', (req, res) => {
   res.send('Single record');
