@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('../services/auth/passport');
-const db = require('../services/db');
+const User = require('../models/user');
 const { v4: uuidv4 } = require('uuid');
 
 router.post('/login', (req, res) =>
@@ -11,15 +11,16 @@ router.post('/login', (req, res) =>
       passwordField: 'password',
       session: false,
     },
-    (err, user, trace) => {
+    async (err, user, trace) => {
       if (err || !user) {
         throw new Error(trace.message || 'Authentication error');
       }
 
-      // Generate token for user:
-      const newToken = uuidv4();
+      // Generate token for user and actualize:
+      user.token = uuidv4();
+      await User.saveUser(user);
 
-      res.send({ token: newToken });
+      res.send({ token: user.token });
     },
   )(req, res),
 );
