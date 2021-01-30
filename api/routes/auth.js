@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const passport = require('../services/auth/passport');
-const User = require('../models/user');
-const { v4: uuidv4 } = require('uuid');
+const jwt = require('jsonwebtoken');
 
 router.post('/login', (req, res) =>
   passport.authenticate(
@@ -16,11 +15,12 @@ router.post('/login', (req, res) =>
         throw new Error(trace.message || 'Authentication error');
       }
 
-      // Generate token for user and actualize:
-      user.token = uuidv4();
-      await User.saveUser(user);
+      const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+        audience: process.env.HOST,
+      });
 
-      res.send({ token: user.token });
+      res.send({ token: jwtToken });
     },
   )(req, res),
 );
